@@ -1,7 +1,30 @@
 import 'package:flutter/material.dart';
 
-class GreetingsScreen extends StatelessWidget {
+import '../client.dart';
+
+class GreetingsScreen extends StatefulWidget {
   const GreetingsScreen({super.key});
+
+  @override
+  State<GreetingsScreen> createState() => _GreetingsScreenState();
+}
+
+class _GreetingsScreenState extends State<GreetingsScreen> {
+  String _currentHolder = 'Loading...';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentHolder();
+  }
+
+  Future<void> _loadCurrentHolder() async {
+    final holder = await client.flame.getCurrentHolder();
+
+    setState(() {
+      _currentHolder = holder;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +52,9 @@ class GreetingsScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Pauline',
-              style: TextStyle(
+            Text(
+              _currentHolder,
+              style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),

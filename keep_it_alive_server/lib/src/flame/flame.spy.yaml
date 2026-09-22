@@ -1,0 +1,5 @@
+class: Flame
+table: flame
+fields:
+  currentHolder: String
+  isAlive: bool

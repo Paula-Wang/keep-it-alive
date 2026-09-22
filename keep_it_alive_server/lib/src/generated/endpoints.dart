@@ -17,6 +17,7 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
 import '../auth/email_idp_endpoint.dart' as _iuc1hd5t;
 import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
+import '../flame/flame_endpoint.dart' as _i3knnotg;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
 
 class Endpoints extends _is.EndpointDispatch {
@@ -33,6 +34,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'jwtRefresh',
+          null,
+        ),
+      'flame': _i3knnotg.FlameEndpoint()
+        ..initialize(
+          server,
+          'flame',
           null,
         ),
       'greeting': _il624ik7.GreetingEndpoint()
@@ -245,6 +252,22 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         refreshToken: params['refreshToken'],
                       ),
+        ),
+      },
+    );
+    connectors['flame'] = _is.EndpointConnector(
+      name: 'flame',
+      endpoint: endpoints['flame']!,
+      methodConnectors: {
+        'getCurrentHolder': _is.MethodConnector(
+          name: 'getCurrentHolder',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['flame'] as _i3knnotg.FlameEndpoint)
+                  .getCurrentHolder(session),
         ),
       },
     );

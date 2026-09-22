@@ -17,7 +17,9 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
+import 'flame/flame.dart' as _iaivvhjt;
 import 'greetings/greeting.dart' as _izw8z7ou;
+export 'flame/flame.dart';
 export 'greetings/greeting.dart';
 
 class Protocol extends _is.DatabaseSerializationManager {
@@ -28,6 +30,36 @@ class Protocol extends _is.DatabaseSerializationManager {
   static final Protocol _instance = Protocol._().._registerHostProtocols();
 
   static List<_isp.TableDefinition> get targetTableDefinitions => [
+    _isp.TableDefinition(
+      name: 'flame',
+      dartName: 'Flame',
+      schema: 'public',
+      module: 'keep_it_alive',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'currentHolder',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'isAlive',
+          columnType: _isp.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
     ..._iais.Protocol.targetTableDefinitions,
     ..._iacs.Protocol.targetTableDefinitions,
     ..._isp.Protocol.targetTableDefinitions,
@@ -60,8 +92,14 @@ class Protocol extends _is.DatabaseSerializationManager {
       }
     }
 
+    if (t == _iaivvhjt.Flame) {
+      return _iaivvhjt.Flame.fromJson(data) as T;
+    }
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
+    }
+    if (t == _is.getType<_iaivvhjt.Flame?>()) {
+      return (data != null ? _iaivvhjt.Flame.fromJson(data) : null) as T;
     }
     if (t == _is.getType<_izw8z7ou.Greeting?>()) {
       return (data != null ? _izw8z7ou.Greeting.fromJson(data) : null) as T;
@@ -80,6 +118,7 @@ class Protocol extends _is.DatabaseSerializationManager {
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
+      _iaivvhjt.Flame => 'Flame',
       _izw8z7ou.Greeting => 'Greeting',
       _ => null,
     };
@@ -98,6 +137,8 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
 
     switch (data) {
+      case _iaivvhjt.Flame():
+        return 'Flame';
       case _izw8z7ou.Greeting():
         return 'Greeting';
     }
@@ -125,6 +166,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     var dataClassName = data['className'];
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
+    }
+    if (dataClassName == 'Flame') {
+      return deserialize<_iaivvhjt.Flame>(data['data']);
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);
@@ -168,6 +212,10 @@ class Protocol extends _is.DatabaseSerializationManager {
       if (table != null) {
         return table;
       }
+    }
+    switch (t) {
+      case _iaivvhjt.Flame:
+        return _iaivvhjt.Flame.t;
     }
     return null;
   }

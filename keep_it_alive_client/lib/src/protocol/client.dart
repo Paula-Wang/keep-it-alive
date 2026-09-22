@@ -246,6 +246,20 @@ class EndpointJwtRefresh extends _iacc.EndpointRefreshJwtTokens {
       );
 }
 
+/// {@category Endpoint}
+class EndpointFlame extends _isc.EndpointRef {
+  EndpointFlame(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'flame';
+
+  _ida.Future<String> getCurrentHolder() => caller.callServerEndpoint<String>(
+    'flame',
+    'getCurrentHolder',
+    {},
+  );
+}
+
 /// This is an example endpoint that returns a greeting message through
 /// its [hello] method.
 /// {@category Endpoint}
@@ -304,6 +318,7 @@ class Client extends _isc.ServerpodClientShared {
        ) {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    flame = EndpointFlame(this);
     greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
@@ -311,6 +326,8 @@ class Client extends _isc.ServerpodClientShared {
   late final EndpointEmailIdp emailIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
+
+  late final EndpointFlame flame;
 
   late final EndpointGreeting greeting;
 
@@ -320,6 +337,7 @@ class Client extends _isc.ServerpodClientShared {
   Map<String, _isc.EndpointRef> get endpointRefLookup => {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'flame': flame,
     'greeting': greeting,
   };
 
