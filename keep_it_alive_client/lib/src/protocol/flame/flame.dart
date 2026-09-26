@@ -18,12 +18,14 @@ abstract class Flame
     this.id,
     required this.currentHolder,
     required this.isAlive,
+    this.expiresAt,
   });
 
   factory Flame({
     int? id,
     required String currentHolder,
     required bool isAlive,
+    DateTime? expiresAt,
   }) = _FlameImpl;
 
   factory Flame.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -31,6 +33,9 @@ abstract class Flame
       id: jsonSerialization['id'] as int?,
       currentHolder: jsonSerialization['currentHolder'] as String,
       isAlive: _isc.BoolJsonExtension.fromJson(jsonSerialization['isAlive']),
+      expiresAt: jsonSerialization['expiresAt'] == null
+          ? null
+          : _isc.DateTimeJsonExtension.fromJson(jsonSerialization['expiresAt']),
     );
   }
 
@@ -43,6 +48,8 @@ abstract class Flame
 
   bool isAlive;
 
+  DateTime? expiresAt;
+
   /// Returns a shallow copy of this [Flame]
   /// with some or all fields replaced by the given arguments.
   @_isc.useResult
@@ -50,6 +57,7 @@ abstract class Flame
     int? id,
     String? currentHolder,
     bool? isAlive,
+    DateTime? expiresAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -58,6 +66,7 @@ abstract class Flame
       if (id != null) 'id': id,
       'currentHolder': currentHolder,
       'isAlive': isAlive,
+      if (expiresAt != null) 'expiresAt': expiresAt?.toJson(),
     };
   }
 
@@ -68,6 +77,7 @@ abstract class Flame
       if (id != null) 'id': id,
       'currentHolder': currentHolder,
       'isAlive': isAlive,
+      if (expiresAt != null) 'expiresAt': expiresAt?.toJson(),
     };
   }
 
@@ -84,10 +94,12 @@ class _FlameImpl extends Flame {
     int? id,
     required String currentHolder,
     required bool isAlive,
+    DateTime? expiresAt,
   }) : super._(
          id: id,
          currentHolder: currentHolder,
          isAlive: isAlive,
+         expiresAt: expiresAt,
        );
 
   /// Returns a shallow copy of this [Flame]
@@ -98,11 +110,13 @@ class _FlameImpl extends Flame {
     Object? id = _Undefined,
     String? currentHolder,
     bool? isAlive,
+    Object? expiresAt = _Undefined,
   }) {
     return Flame(
       id: id is int? ? id : this.id,
       currentHolder: currentHolder ?? this.currentHolder,
       isAlive: isAlive ?? this.isAlive,
+      expiresAt: expiresAt is DateTime? ? expiresAt : this.expiresAt,
     );
   }
 }

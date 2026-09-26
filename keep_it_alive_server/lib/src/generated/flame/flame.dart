@@ -17,12 +17,14 @@ abstract class Flame implements _is.TableRow<int?>, _is.ProtocolSerialization {
     this.id,
     required this.currentHolder,
     required this.isAlive,
+    this.expiresAt,
   });
 
   factory Flame({
     int? id,
     required String currentHolder,
     required bool isAlive,
+    DateTime? expiresAt,
   }) = _FlameImpl;
 
   factory Flame.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -30,6 +32,9 @@ abstract class Flame implements _is.TableRow<int?>, _is.ProtocolSerialization {
       id: jsonSerialization['id'] as int?,
       currentHolder: jsonSerialization['currentHolder'] as String,
       isAlive: _is.BoolJsonExtension.fromJson(jsonSerialization['isAlive']),
+      expiresAt: jsonSerialization['expiresAt'] == null
+          ? null
+          : _is.DateTimeJsonExtension.fromJson(jsonSerialization['expiresAt']),
     );
   }
 
@@ -44,6 +49,8 @@ abstract class Flame implements _is.TableRow<int?>, _is.ProtocolSerialization {
 
   bool isAlive;
 
+  DateTime? expiresAt;
+
   @override
   _is.Table<int?> get table => t;
 
@@ -54,6 +61,7 @@ abstract class Flame implements _is.TableRow<int?>, _is.ProtocolSerialization {
     int? id,
     String? currentHolder,
     bool? isAlive,
+    DateTime? expiresAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -62,6 +70,7 @@ abstract class Flame implements _is.TableRow<int?>, _is.ProtocolSerialization {
       if (id != null) 'id': id,
       'currentHolder': currentHolder,
       'isAlive': isAlive,
+      if (expiresAt != null) 'expiresAt': expiresAt?.toJson(),
     };
   }
 
@@ -72,6 +81,7 @@ abstract class Flame implements _is.TableRow<int?>, _is.ProtocolSerialization {
       if (id != null) 'id': id,
       'currentHolder': currentHolder,
       'isAlive': isAlive,
+      if (expiresAt != null) 'expiresAt': expiresAt?.toJson(),
     };
   }
 
@@ -110,10 +120,12 @@ class _FlameImpl extends Flame {
     int? id,
     required String currentHolder,
     required bool isAlive,
+    DateTime? expiresAt,
   }) : super._(
          id: id,
          currentHolder: currentHolder,
          isAlive: isAlive,
+         expiresAt: expiresAt,
        );
 
   /// Returns a shallow copy of this [Flame]
@@ -124,11 +136,13 @@ class _FlameImpl extends Flame {
     Object? id = _Undefined,
     String? currentHolder,
     bool? isAlive,
+    Object? expiresAt = _Undefined,
   }) {
     return Flame(
       id: id is int? ? id : this.id,
       currentHolder: currentHolder ?? this.currentHolder,
       isAlive: isAlive ?? this.isAlive,
+      expiresAt: expiresAt is DateTime? ? expiresAt : this.expiresAt,
     );
   }
 }
@@ -146,6 +160,12 @@ class FlameUpdateTable extends _is.UpdateTable<FlameTable> {
     table.isAlive,
     value,
   );
+
+  _is.ColumnValue<DateTime, DateTime> expiresAt(DateTime? value) =>
+      _is.ColumnValue(
+        table.expiresAt,
+        value,
+      );
 }
 
 class FlameTable extends _is.Table<int?> {
@@ -159,6 +179,10 @@ class FlameTable extends _is.Table<int?> {
       'isAlive',
       this,
     );
+    expiresAt = _is.ColumnDateTime(
+      'expiresAt',
+      this,
+    );
   }
 
   late final FlameUpdateTable updateTable;
@@ -167,11 +191,14 @@ class FlameTable extends _is.Table<int?> {
 
   late final _is.ColumnBool isAlive;
 
+  late final _is.ColumnDateTime expiresAt;
+
   @override
   List<_is.Column> get columns => [
     id,
     currentHolder,
     isAlive,
+    expiresAt,
   ];
 }
 

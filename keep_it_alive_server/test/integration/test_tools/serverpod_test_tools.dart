@@ -13,6 +13,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _ida;
 import 'dart:io' as _idi;
+import 'package:keep_it_alive_server/src/generated/flame/flame.dart'
+    as _igzuzhsr;
 import 'package:keep_it_alive_server/src/generated/greetings/greeting.dart'
     as _ils43cnz;
 import 'package:serverpod/serverpod.dart' as _is;
@@ -533,6 +535,36 @@ class _FlameEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<String>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_igzuzhsr.Flame> getFlame(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'flame',
+            method: 'getFlame',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'flame',
+          methodName: 'getFlame',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_igzuzhsr.Flame>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

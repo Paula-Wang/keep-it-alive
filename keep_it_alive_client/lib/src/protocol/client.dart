@@ -12,6 +12,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _ida;
 import 'package:http/http.dart' as _i85jenna;
+import 'package:keep_it_alive_client/src/protocol/flame/flame.dart'
+    as _is6hy4a6;
 import 'package:keep_it_alive_client/src/protocol/greetings/greeting.dart'
     as _ing4wbyb;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
@@ -258,6 +260,13 @@ class EndpointFlame extends _isc.EndpointRef {
     'getCurrentHolder',
     {},
   );
+
+  _ida.Future<_is6hy4a6.Flame> getFlame() =>
+      caller.callServerEndpoint<_is6hy4a6.Flame>(
+        'flame',
+        'getFlame',
+        {},
+      );
 
   _ida.Future<String> passFlame(String newHolder) =>
       caller.callServerEndpoint<String>(

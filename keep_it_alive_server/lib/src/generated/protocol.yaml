@@ -11,6 +11,7 @@ jwtRefresh:
   - refreshAccessToken:
 flame:
   - getCurrentHolder:
+  - getFlame:
   - passFlame:
 greeting:
   - hello:
