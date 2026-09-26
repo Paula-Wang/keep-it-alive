@@ -258,6 +258,13 @@ class EndpointFlame extends _isc.EndpointRef {
     'getCurrentHolder',
     {},
   );
+
+  _ida.Future<String> passFlame(String newHolder) =>
+      caller.callServerEndpoint<String>(
+        'flame',
+        'passFlame',
+        {'newHolder': newHolder},
+      );
 }
 
 /// This is an example endpoint that returns a greeting message through

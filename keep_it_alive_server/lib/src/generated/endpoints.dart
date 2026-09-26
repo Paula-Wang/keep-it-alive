@@ -269,6 +269,25 @@ class Endpoints extends _is.EndpointDispatch {
               ) async => (endpoints['flame'] as _i3knnotg.FlameEndpoint)
                   .getCurrentHolder(session),
         ),
+        'passFlame': _is.MethodConnector(
+          name: 'passFlame',
+          params: {
+            'newHolder': _is.ParameterDescription(
+              name: 'newHolder',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['flame'] as _i3knnotg.FlameEndpoint).passFlame(
+                    session,
+                    params['newHolder'],
+                  ),
+        ),
       },
     );
     connectors['greeting'] = _is.EndpointConnector(

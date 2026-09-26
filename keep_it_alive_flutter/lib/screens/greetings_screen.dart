@@ -11,11 +11,18 @@ class GreetingsScreen extends StatefulWidget {
 
 class _GreetingsScreenState extends State<GreetingsScreen> {
   String _currentHolder = 'Loading...';
+  final _newHolderController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _loadCurrentHolder();
+  }
+
+  @override
+  void dispose() {
+    _newHolderController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadCurrentHolder() async {
@@ -60,8 +67,32 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
               ),
             ),
             const SizedBox(height: 40),
+            SizedBox(
+              width: 300,
+              child: TextField(
+                controller: _newHolderController,
+                decoration: const InputDecoration(
+                  labelText: 'Who should receive the flame?',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                final name = _newHolderController.text.trim();
+
+                if (name.isEmpty) {
+                  return;
+                }
+
+                final newHolder = await client.flame.passFlame(name);
+
+                setState(() {
+                  _currentHolder = newHolder;
+                  _newHolderController.clear();
+                });
+              },
               child: const Text('PASS THE FLAME'),
             ),
           ],
