@@ -17,6 +17,8 @@ import 'package:keep_it_alive_server/src/generated/flame/flame.dart'
     as _igzuzhsr;
 import 'package:keep_it_alive_server/src/generated/greetings/greeting.dart'
     as _ils43cnz;
+import 'package:keep_it_alive_server/src/generated/player/player.dart'
+    as _i2f0cjc1;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
@@ -156,6 +158,8 @@ class TestEndpoints {
   late final _FlameEndpoint flame;
 
   late final _GreetingEndpoint greeting;
+
+  late final _PlayerEndpoint player;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -178,6 +182,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     greeting = _GreetingEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    player = _PlayerEndpoint(
       endpoints,
       serializationManager,
     );
@@ -574,7 +582,7 @@ class _FlameEndpoint {
 
   _ida.Future<_igzuzhsr.Flame> passFlame(
     _ist.TestSessionBuilder sessionBuilder,
-    String newHolder,
+    int newHolderId,
   ) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -587,7 +595,7 @@ class _FlameEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'flame',
           methodName: 'passFlame',
-          parameters: _ist.testObjectToJson({'newHolder': newHolder}),
+          parameters: _ist.testObjectToJson({'newHolderId': newHolderId}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =
@@ -605,7 +613,7 @@ class _FlameEndpoint {
 
   _ida.Future<_igzuzhsr.Flame> startNewFlame(
     _ist.TestSessionBuilder sessionBuilder,
-    String holder,
+    int holderId,
   ) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -618,7 +626,7 @@ class _FlameEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'flame',
           methodName: 'startNewFlame',
-          parameters: _ist.testObjectToJson({'holder': holder}),
+          parameters: _ist.testObjectToJson({'holderId': holderId}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =
@@ -669,6 +677,78 @@ class _GreetingEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<_ils43cnz.Greeting>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _PlayerEndpoint {
+  _PlayerEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_i2f0cjc1.Player> createPlayer(
+    _ist.TestSessionBuilder sessionBuilder,
+    String name,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'player',
+            method: 'createPlayer',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'player',
+          methodName: 'createPlayer',
+          parameters: _ist.testObjectToJson({'name': name}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i2f0cjc1.Player>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_i2f0cjc1.Player>> getPlayers(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'player',
+            method: 'getPlayers',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'player',
+          methodName: 'getPlayers',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_i2f0cjc1.Player>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

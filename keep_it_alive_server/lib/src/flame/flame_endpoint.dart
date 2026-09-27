@@ -55,8 +55,16 @@ class FlameEndpoint extends Endpoint {
 
   Future<Flame> passFlame(
     Session session,
-    String newHolder,
+    int newHolderId,
   ) async {
+    final newHolder = await Player.db.findById(
+      session,
+      newHolderId,
+    );
+
+    if (newHolder == null) {
+      throw Exception('Player does not exist.');
+    }
     var flame = await Flame.db.findFirstRow(session);
 
     if (flame == null) {
@@ -79,7 +87,8 @@ class FlameEndpoint extends Endpoint {
     }
 
     flame = flame.copyWith(
-      currentHolder: newHolder,
+      currentHolder: newHolder.name,
+      currentHolderId: newHolder.id,
       isAlive: true,
       expiresAt: DateTime.now().toUtc().add(
         const Duration(seconds: 30),
@@ -93,13 +102,23 @@ class FlameEndpoint extends Endpoint {
 
   Future<Flame> startNewFlame(
     Session session,
-    String holder,
+    int holderId,
   ) async {
+    final holder = await Player.db.findById(
+      session,
+      holderId,
+    );
+
+    if (holder == null) {
+      throw Exception('Player does not exist.');
+    }
+
     var flame = await Flame.db.findFirstRow(session);
 
     if (flame == null) {
       flame = Flame(
-        currentHolder: holder,
+        currentHolder: holder.name,
+        currentHolderId: holder.id,
         isAlive: true,
         expiresAt: DateTime.now().toUtc().add(
           const Duration(seconds: 30),
@@ -110,7 +129,8 @@ class FlameEndpoint extends Endpoint {
     }
 
     flame = flame.copyWith(
-      currentHolder: holder,
+      currentHolder: holder.name,
+      currentHolderId: holder.id,
       isAlive: true,
       expiresAt: DateTime.now().toUtc().add(
         const Duration(seconds: 30),

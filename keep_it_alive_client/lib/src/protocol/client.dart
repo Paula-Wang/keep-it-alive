@@ -16,6 +16,8 @@ import 'package:keep_it_alive_client/src/protocol/flame/flame.dart'
     as _is6hy4a6;
 import 'package:keep_it_alive_client/src/protocol/greetings/greeting.dart'
     as _ing4wbyb;
+import 'package:keep_it_alive_client/src/protocol/player/player.dart'
+    as _ilc4ddwm;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
@@ -268,18 +270,18 @@ class EndpointFlame extends _isc.EndpointRef {
         {},
       );
 
-  _ida.Future<_is6hy4a6.Flame> passFlame(String newHolder) =>
+  _ida.Future<_is6hy4a6.Flame> passFlame(int newHolderId) =>
       caller.callServerEndpoint<_is6hy4a6.Flame>(
         'flame',
         'passFlame',
-        {'newHolder': newHolder},
+        {'newHolderId': newHolderId},
       );
 
-  _ida.Future<_is6hy4a6.Flame> startNewFlame(String holder) =>
+  _ida.Future<_is6hy4a6.Flame> startNewFlame(int holderId) =>
       caller.callServerEndpoint<_is6hy4a6.Flame>(
         'flame',
         'startNewFlame',
-        {'holder': holder},
+        {'holderId': holderId},
       );
 }
 
@@ -298,6 +300,28 @@ class EndpointGreeting extends _isc.EndpointRef {
         'greeting',
         'hello',
         {'name': name},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointPlayer extends _isc.EndpointRef {
+  EndpointPlayer(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'player';
+
+  _ida.Future<_ilc4ddwm.Player> createPlayer(String name) =>
+      caller.callServerEndpoint<_ilc4ddwm.Player>(
+        'player',
+        'createPlayer',
+        {'name': name},
+      );
+
+  _ida.Future<List<_ilc4ddwm.Player>> getPlayers() =>
+      caller.callServerEndpoint<List<_ilc4ddwm.Player>>(
+        'player',
+        'getPlayers',
+        {},
       );
 }
 
@@ -343,6 +367,7 @@ class Client extends _isc.ServerpodClientShared {
     jwtRefresh = EndpointJwtRefresh(this);
     flame = EndpointFlame(this);
     greeting = EndpointGreeting(this);
+    player = EndpointPlayer(this);
     modules = Modules(this);
   }
 
@@ -354,6 +379,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointGreeting greeting;
 
+  late final EndpointPlayer player;
+
   late final Modules modules;
 
   @override
@@ -362,6 +389,7 @@ class Client extends _isc.ServerpodClientShared {
     'jwtRefresh': jwtRefresh,
     'flame': flame,
     'greeting': greeting,
+    'player': player,
   };
 
   @override

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'package:keep_it_alive_client/keep_it_alive_client.dart';
+
 import '../client.dart';
 
 class GreetingsScreen extends StatefulWidget {
@@ -17,12 +19,14 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
   DateTime? _expiresAt;
   Timer? _timer;
   int _secondsRemaining = 0;
-
-  final _newHolderController = TextEditingController();
+  List<Player> _players = [];
+  Player? _selectedPlayer;
 
   @override
   void initState() {
     super.initState();
+
+    _loadPlayers();
 
     _loadCurrentHolder().then((_) {
       _updateCountdown();
@@ -39,8 +43,15 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
   @override
   void dispose() {
     _timer?.cancel();
-    _newHolderController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadPlayers() async {
+    final players = await client.player.getPlayers();
+
+    setState(() {
+      _players = players;
+    });
   }
 
   Future<void> _loadCurrentHolder() async {
@@ -125,32 +136,45 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
             const SizedBox(height: 40),
             SizedBox(
               width: 300,
-              child: TextField(
-                controller: _newHolderController,
+              child: DropdownButtonFormField<Player>(
+                value: _selectedPlayer,
                 decoration: const InputDecoration(
                   labelText: 'Who should receive the flame?',
                   border: OutlineInputBorder(),
                 ),
+                items: _players.map((player) {
+                  return DropdownMenuItem<Player>(
+                    value: player,
+                    child: Text(player.name),
+                  );
+                }).toList(),
+                onChanged: _isAlive
+                    ? (player) {
+                        setState(() {
+                          _selectedPlayer = player;
+                        });
+                      }
+                    : null,
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: !_isAlive
+              onPressed: !_isAlive || _selectedPlayer == null
                   ? null
                   : () async {
-                      final name = _newHolderController.text.trim();
+                      final player = _selectedPlayer!;
 
-                      if (name.isEmpty) {
+                      if (player.id == null) {
                         return;
                       }
 
-                      final flame = await client.flame.passFlame(name);
+                      final flame = await client.flame.passFlame(player.id!);
 
                       setState(() {
                         _currentHolder = flame.currentHolder;
                         _isAlive = flame.isAlive;
                         _expiresAt = flame.expiresAt;
-                        _newHolderController.clear();
+                        _selectedPlayer = null;
                       });
 
                       _updateCountdown();
@@ -161,13 +185,20 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                  final flame = await client.flame.startNewFlame('Pauline');
+                  final pauline = _players.firstWhere(
+                    (player) => player.name == 'Pauline',
+                  );
+
+                  if (pauline.id == null) {
+                    return;
+                  }
+
+                  final flame = await client.flame.startNewFlame(pauline.id!);
 
                   setState(() {
                     _currentHolder = flame.currentHolder;
                     _isAlive = flame.isAlive;
                     _expiresAt = flame.expiresAt;
-                    _newHolderController.clear();
                   });
 
                   _updateCountdown();

@@ -16,3 +16,6 @@ flame:
   - startNewFlame:
 greeting:
   - hello:
+player:
+  - createPlayer:
+  - getPlayers:

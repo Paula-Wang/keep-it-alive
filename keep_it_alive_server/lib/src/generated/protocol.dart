@@ -11,6 +11,8 @@
 // ignore_for_file: dead_code, unnecessary_type_check
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:keep_it_alive_server/src/generated/player/player.dart'
+    as _i2f0cjc1;
 import 'package:serverpod/protocol.dart' as _isp;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
@@ -19,8 +21,10 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
 import 'flame/flame.dart' as _iaivvhjt;
 import 'greetings/greeting.dart' as _izw8z7ou;
+import 'player/player.dart' as _i1eknpuq;
 export 'flame/flame.dart';
 export 'greetings/greeting.dart';
+export 'player/player.dart';
 
 class Protocol extends _is.DatabaseSerializationManager {
   Protocol._();
@@ -50,6 +54,12 @@ class Protocol extends _is.DatabaseSerializationManager {
           dartType: 'String',
         ),
         _isp.ColumnDefinition(
+          name: 'currentHolderId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _isp.ColumnDefinition(
           name: 'isAlive',
           columnType: _isp.ColumnType.boolean,
           isNullable: false,
@@ -60,6 +70,30 @@ class Protocol extends _is.DatabaseSerializationManager {
           columnType: _isp.ColumnType.timestampWithoutTimeZone,
           isNullable: true,
           dartType: 'DateTime?',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'player',
+      dartName: 'Player',
+      schema: 'public',
+      module: 'keep_it_alive',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'name',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
         ),
       ],
       foreignKeys: [],
@@ -104,11 +138,23 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
     }
+    if (t == _i1eknpuq.Player) {
+      return _i1eknpuq.Player.fromJson(data) as T;
+    }
     if (t == _is.getType<_iaivvhjt.Flame?>()) {
       return (data != null ? _iaivvhjt.Flame.fromJson(data) : null) as T;
     }
     if (t == _is.getType<_izw8z7ou.Greeting?>()) {
       return (data != null ? _izw8z7ou.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_i1eknpuq.Player?>()) {
+      return (data != null ? _i1eknpuq.Player.fromJson(data) : null) as T;
+    }
+    if (t == List<_i2f0cjc1.Player>) {
+      return (data as List)
+              .map((e) => deserialize<_i2f0cjc1.Player>(e))
+              .toList()
+          as T;
     }
     try {
       return _iais.Protocol().deserialize<T>(data, t);
@@ -126,6 +172,7 @@ class Protocol extends _is.DatabaseSerializationManager {
     return switch (type) {
       _iaivvhjt.Flame => 'Flame',
       _izw8z7ou.Greeting => 'Greeting',
+      _i1eknpuq.Player => 'Player',
       _ => null,
     };
   }
@@ -147,6 +194,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'Flame';
       case _izw8z7ou.Greeting():
         return 'Greeting';
+      case _i1eknpuq.Player():
+        return 'Player';
     }
     className = _iais.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -178,6 +227,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);
+    }
+    if (dataClassName == 'Player') {
+      return deserialize<_i1eknpuq.Player>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
@@ -222,6 +274,8 @@ class Protocol extends _is.DatabaseSerializationManager {
     switch (t) {
       case _iaivvhjt.Flame:
         return _iaivvhjt.Flame.t;
+      case _i1eknpuq.Player:
+        return _i1eknpuq.Player.t;
     }
     return null;
   }

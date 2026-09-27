@@ -19,6 +19,7 @@ import '../auth/email_idp_endpoint.dart' as _iuc1hd5t;
 import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
 import '../flame/flame_endpoint.dart' as _i3knnotg;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
+import '../player/player_endpoint.dart' as _ikcol2tc;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -46,6 +47,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'greeting',
+          null,
+        ),
+      'player': _ikcol2tc.PlayerEndpoint()
+        ..initialize(
+          server,
+          'player',
           null,
         ),
     };
@@ -282,9 +289,9 @@ class Endpoints extends _is.EndpointDispatch {
         'passFlame': _is.MethodConnector(
           name: 'passFlame',
           params: {
-            'newHolder': _is.ParameterDescription(
-              name: 'newHolder',
-              type: _is.getType<String>(),
+            'newHolderId': _is.ParameterDescription(
+              name: 'newHolderId',
+              type: _is.getType<int>(),
               nullable: false,
             ),
           },
@@ -295,15 +302,15 @@ class Endpoints extends _is.EndpointDispatch {
               ) async =>
                   (endpoints['flame'] as _i3knnotg.FlameEndpoint).passFlame(
                     session,
-                    params['newHolder'],
+                    params['newHolderId'],
                   ),
         ),
         'startNewFlame': _is.MethodConnector(
           name: 'startNewFlame',
           params: {
-            'holder': _is.ParameterDescription(
-              name: 'holder',
-              type: _is.getType<String>(),
+            'holderId': _is.ParameterDescription(
+              name: 'holderId',
+              type: _is.getType<int>(),
               nullable: false,
             ),
           },
@@ -314,7 +321,7 @@ class Endpoints extends _is.EndpointDispatch {
               ) async =>
                   (endpoints['flame'] as _i3knnotg.FlameEndpoint).startNewFlame(
                     session,
-                    params['holder'],
+                    params['holderId'],
                   ),
         ),
       },
@@ -341,6 +348,41 @@ class Endpoints extends _is.EndpointDispatch {
                     session,
                     params['name'],
                   ),
+        ),
+      },
+    );
+    connectors['player'] = _is.EndpointConnector(
+      name: 'player',
+      endpoint: endpoints['player']!,
+      methodConnectors: {
+        'createPlayer': _is.MethodConnector(
+          name: 'createPlayer',
+          params: {
+            'name': _is.ParameterDescription(
+              name: 'name',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['player'] as _ikcol2tc.PlayerEndpoint)
+                  .createPlayer(
+                    session,
+                    params['name'],
+                  ),
+        ),
+        'getPlayers': _is.MethodConnector(
+          name: 'getPlayers',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['player'] as _ikcol2tc.PlayerEndpoint)
+                  .getPlayers(session),
         ),
       },
     );

@@ -17,6 +17,7 @@ abstract class Flame
   Flame._({
     this.id,
     required this.currentHolder,
+    this.currentHolderId,
     required this.isAlive,
     this.expiresAt,
   });
@@ -24,6 +25,7 @@ abstract class Flame
   factory Flame({
     int? id,
     required String currentHolder,
+    int? currentHolderId,
     required bool isAlive,
     DateTime? expiresAt,
   }) = _FlameImpl;
@@ -32,6 +34,7 @@ abstract class Flame
     return Flame(
       id: jsonSerialization['id'] as int?,
       currentHolder: jsonSerialization['currentHolder'] as String,
+      currentHolderId: jsonSerialization['currentHolderId'] as int?,
       isAlive: _isc.BoolJsonExtension.fromJson(jsonSerialization['isAlive']),
       expiresAt: jsonSerialization['expiresAt'] == null
           ? null
@@ -46,6 +49,8 @@ abstract class Flame
 
   String currentHolder;
 
+  int? currentHolderId;
+
   bool isAlive;
 
   DateTime? expiresAt;
@@ -56,6 +61,7 @@ abstract class Flame
   Flame copyWith({
     int? id,
     String? currentHolder,
+    int? currentHolderId,
     bool? isAlive,
     DateTime? expiresAt,
   });
@@ -65,6 +71,7 @@ abstract class Flame
       '__className__': 'Flame',
       if (id != null) 'id': id,
       'currentHolder': currentHolder,
+      if (currentHolderId != null) 'currentHolderId': currentHolderId,
       'isAlive': isAlive,
       if (expiresAt != null) 'expiresAt': expiresAt?.toJson(),
     };
@@ -76,6 +83,7 @@ abstract class Flame
       '__className__': 'Flame',
       if (id != null) 'id': id,
       'currentHolder': currentHolder,
+      if (currentHolderId != null) 'currentHolderId': currentHolderId,
       'isAlive': isAlive,
       if (expiresAt != null) 'expiresAt': expiresAt?.toJson(),
     };
@@ -93,11 +101,13 @@ class _FlameImpl extends Flame {
   _FlameImpl({
     int? id,
     required String currentHolder,
+    int? currentHolderId,
     required bool isAlive,
     DateTime? expiresAt,
   }) : super._(
          id: id,
          currentHolder: currentHolder,
+         currentHolderId: currentHolderId,
          isAlive: isAlive,
          expiresAt: expiresAt,
        );
@@ -109,12 +119,16 @@ class _FlameImpl extends Flame {
   Flame copyWith({
     Object? id = _Undefined,
     String? currentHolder,
+    Object? currentHolderId = _Undefined,
     bool? isAlive,
     Object? expiresAt = _Undefined,
   }) {
     return Flame(
       id: id is int? ? id : this.id,
       currentHolder: currentHolder ?? this.currentHolder,
+      currentHolderId: currentHolderId is int?
+          ? currentHolderId
+          : this.currentHolderId,
       isAlive: isAlive ?? this.isAlive,
       expiresAt: expiresAt is DateTime? ? expiresAt : this.expiresAt,
     );

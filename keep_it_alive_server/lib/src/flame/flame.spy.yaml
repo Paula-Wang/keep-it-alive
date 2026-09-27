@@ -2,5 +2,7 @@ class: Flame
 table: flame
 fields:
   currentHolder: String
+  currentHolderId: int?
   isAlive: bool
   expiresAt: DateTime?
+ 
