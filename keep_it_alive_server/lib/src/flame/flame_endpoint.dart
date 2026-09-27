@@ -53,7 +53,7 @@ class FlameEndpoint extends Endpoint {
     return flame;
   }
 
-  Future<String> passFlame(
+  Future<Flame> passFlame(
     Session session,
     String newHolder,
   ) async {
@@ -88,6 +88,35 @@ class FlameEndpoint extends Endpoint {
 
     flame = await Flame.db.updateRow(session, flame);
 
-    return flame.currentHolder;
+    return flame;
+  }
+
+  Future<Flame> startNewFlame(
+    Session session,
+    String holder,
+  ) async {
+    var flame = await Flame.db.findFirstRow(session);
+
+    if (flame == null) {
+      flame = Flame(
+        currentHolder: holder,
+        isAlive: true,
+        expiresAt: DateTime.now().toUtc().add(
+          const Duration(seconds: 30),
+        ),
+      );
+
+      return await Flame.db.insertRow(session, flame);
+    }
+
+    flame = flame.copyWith(
+      currentHolder: holder,
+      isAlive: true,
+      expiresAt: DateTime.now().toUtc().add(
+        const Duration(seconds: 30),
+      ),
+    );
+
+    return await Flame.db.updateRow(session, flame);
   }
 }

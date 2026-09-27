@@ -572,7 +572,7 @@ class _FlameEndpoint {
     });
   }
 
-  _ida.Future<String> passFlame(
+  _ida.Future<_igzuzhsr.Flame> passFlame(
     _ist.TestSessionBuilder sessionBuilder,
     String newHolder,
   ) async {
@@ -595,7 +595,38 @@ class _FlameEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _ida.Future<String>);
+                as _ida.Future<_igzuzhsr.Flame>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_igzuzhsr.Flame> startNewFlame(
+    _ist.TestSessionBuilder sessionBuilder,
+    String holder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'flame',
+            method: 'startNewFlame',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'flame',
+          methodName: 'startNewFlame',
+          parameters: _ist.testObjectToJson({'holder': holder}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_igzuzhsr.Flame>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

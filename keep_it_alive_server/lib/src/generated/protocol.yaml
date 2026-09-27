@@ -13,5 +13,6 @@ flame:
   - getCurrentHolder:
   - getFlame:
   - passFlame:
+  - startNewFlame:
 greeting:
   - hello:

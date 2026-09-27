@@ -65,11 +65,15 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
 
     final difference = expiresAt.difference(DateTime.now().toUtc());
 
+    final remainingMilliseconds = difference.inMilliseconds;
+
     setState(() {
-      _secondsRemaining = difference.inSeconds > 0 ? difference.inSeconds : 0;
+      _secondsRemaining = remainingMilliseconds > 0
+          ? (remainingMilliseconds / 1000).ceil()
+          : 0;
     });
 
-    if (difference.inSeconds <= 0) {
+    if (remainingMilliseconds <= 0) {
       _loadCurrentHolder();
     }
   }
@@ -140,15 +144,37 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
                         return;
                       }
 
-                      final newHolder = await client.flame.passFlame(name);
+                      final flame = await client.flame.passFlame(name);
 
                       setState(() {
-                        _currentHolder = newHolder;
+                        _currentHolder = flame.currentHolder;
+                        _isAlive = flame.isAlive;
+                        _expiresAt = flame.expiresAt;
                         _newHolderController.clear();
                       });
+
+                      _updateCountdown();
                     },
               child: const Text('PASS THE FLAME'),
             ),
+            if (!_isAlive) ...[
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  final flame = await client.flame.startNewFlame('Pauline');
+
+                  setState(() {
+                    _currentHolder = flame.currentHolder;
+                    _isAlive = flame.isAlive;
+                    _expiresAt = flame.expiresAt;
+                    _newHolderController.clear();
+                  });
+
+                  _updateCountdown();
+                },
+                child: const Text('START NEW FLAME'),
+              ),
+            ],
           ],
         ),
       ),

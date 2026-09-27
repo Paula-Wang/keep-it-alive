@@ -268,11 +268,18 @@ class EndpointFlame extends _isc.EndpointRef {
         {},
       );
 
-  _ida.Future<String> passFlame(String newHolder) =>
-      caller.callServerEndpoint<String>(
+  _ida.Future<_is6hy4a6.Flame> passFlame(String newHolder) =>
+      caller.callServerEndpoint<_is6hy4a6.Flame>(
         'flame',
         'passFlame',
         {'newHolder': newHolder},
+      );
+
+  _ida.Future<_is6hy4a6.Flame> startNewFlame(String holder) =>
+      caller.callServerEndpoint<_is6hy4a6.Flame>(
+        'flame',
+        'startNewFlame',
+        {'holder': holder},
       );
 }
 

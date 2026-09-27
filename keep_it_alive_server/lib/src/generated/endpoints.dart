@@ -298,6 +298,25 @@ class Endpoints extends _is.EndpointDispatch {
                     params['newHolder'],
                   ),
         ),
+        'startNewFlame': _is.MethodConnector(
+          name: 'startNewFlame',
+          params: {
+            'holder': _is.ParameterDescription(
+              name: 'holder',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['flame'] as _i3knnotg.FlameEndpoint).startNewFlame(
+                    session,
+                    params['holder'],
+                  ),
+        ),
       },
     );
     connectors['greeting'] = _is.EndpointConnector(
