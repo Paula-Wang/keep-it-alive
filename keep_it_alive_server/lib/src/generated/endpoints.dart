@@ -20,6 +20,7 @@ import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
 import '../flame/flame_endpoint.dart' as _i3knnotg;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
 import '../player/player_endpoint.dart' as _ikcol2tc;
+import '../transfer/transfer_endpoint.dart' as _i0oudqkk;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -53,6 +54,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'player',
+          null,
+        ),
+      'transfer': _i0oudqkk.TransferEndpoint()
+        ..initialize(
+          server,
+          'transfer',
           null,
         ),
     };
@@ -383,6 +390,22 @@ class Endpoints extends _is.EndpointDispatch {
                 Map<String, dynamic> params,
               ) async => (endpoints['player'] as _ikcol2tc.PlayerEndpoint)
                   .getPlayers(session),
+        ),
+      },
+    );
+    connectors['transfer'] = _is.EndpointConnector(
+      name: 'transfer',
+      endpoint: endpoints['transfer']!,
+      methodConnectors: {
+        'getTransfers': _is.MethodConnector(
+          name: 'getTransfers',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['transfer'] as _i0oudqkk.TransferEndpoint)
+                  .getTransfers(session),
         ),
       },
     );

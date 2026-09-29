@@ -21,12 +21,15 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
   int _secondsRemaining = 0;
   List<Player> _players = [];
   Player? _selectedPlayer;
+  List<Transfer> _transfers = [];
 
   @override
   void initState() {
     super.initState();
 
     _loadPlayers();
+
+    _loadTransfers();
 
     _loadCurrentHolder().then((_) {
       _updateCountdown();
@@ -52,6 +55,24 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
     setState(() {
       _players = players;
     });
+  }
+
+  Future<void> _loadTransfers() async {
+    final transfers = await client.transfer.getTransfers();
+
+    setState(() {
+      _transfers = transfers;
+    });
+  }
+
+  String _playerName(int playerId) {
+    for (final player in _players) {
+      if (player.id == playerId) {
+        return player.name;
+      }
+    }
+
+    return 'Unknown';
   }
 
   Future<void> _loadCurrentHolder() async {
@@ -91,8 +112,9 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
+    return SingleChildScrollView(
+  child: Center(
+    child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -181,6 +203,37 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
                     },
               child: const Text('PASS THE FLAME'),
             ),
+            const SizedBox(height: 32),
+
+            if (_transfers.isNotEmpty) ...[
+              const Text(
+                'FLAME JOURNEY 🔥',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              ..._transfers.reversed.take(5).map((transfer) {
+                final fromName = _playerName(transfer.fromPlayerId);
+                final toName = _playerName(transfer.toPlayerId);
+                final time = transfer.transferredAt.toLocal();
+
+                final formattedTime =
+                    '${time.hour.toString().padLeft(2, '0')}:'
+                    '${time.minute.toString().padLeft(2, '0')}:'
+                    '${time.second.toString().padLeft(2, '0')}';
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Text(
+                    '$fromName → $toName  •  $formattedTime',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                );
+              }),
+            ],
             if (!_isAlive) ...[
               const SizedBox(height: 20),
               ElevatedButton(
@@ -209,6 +262,7 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
           ],
         ),
       ),
+  ),
     );
   }
 }

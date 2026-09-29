@@ -1,0 +1,6 @@
+class: Transfer
+table: transfer
+fields:
+  fromPlayerId: int
+  toPlayerId: int
+  transferredAt: DateTime

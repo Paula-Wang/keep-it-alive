@@ -13,6 +13,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:keep_it_alive_server/src/generated/player/player.dart'
     as _i2f0cjc1;
+import 'package:keep_it_alive_server/src/generated/transfer/transfer.dart'
+    as _if6qyzuu;
 import 'package:serverpod/protocol.dart' as _isp;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
@@ -22,9 +24,11 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
 import 'flame/flame.dart' as _iaivvhjt;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'player/player.dart' as _i1eknpuq;
+import 'transfer/transfer.dart' as _irt0g9l3;
 export 'flame/flame.dart';
 export 'greetings/greeting.dart';
 export 'player/player.dart';
+export 'transfer/transfer.dart';
 
 class Protocol extends _is.DatabaseSerializationManager {
   Protocol._();
@@ -100,6 +104,42 @@ class Protocol extends _is.DatabaseSerializationManager {
       indexes: [],
       managed: true,
     ),
+    _isp.TableDefinition(
+      name: 'transfer',
+      dartName: 'Transfer',
+      schema: 'public',
+      module: 'keep_it_alive',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'fromPlayerId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'toPlayerId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'transferredAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
     ..._iais.Protocol.targetTableDefinitions,
     ..._iacs.Protocol.targetTableDefinitions,
     ..._isp.Protocol.targetTableDefinitions,
@@ -141,6 +181,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _i1eknpuq.Player) {
       return _i1eknpuq.Player.fromJson(data) as T;
     }
+    if (t == _irt0g9l3.Transfer) {
+      return _irt0g9l3.Transfer.fromJson(data) as T;
+    }
     if (t == _is.getType<_iaivvhjt.Flame?>()) {
       return (data != null ? _iaivvhjt.Flame.fromJson(data) : null) as T;
     }
@@ -150,9 +193,18 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _is.getType<_i1eknpuq.Player?>()) {
       return (data != null ? _i1eknpuq.Player.fromJson(data) : null) as T;
     }
+    if (t == _is.getType<_irt0g9l3.Transfer?>()) {
+      return (data != null ? _irt0g9l3.Transfer.fromJson(data) : null) as T;
+    }
     if (t == List<_i2f0cjc1.Player>) {
       return (data as List)
               .map((e) => deserialize<_i2f0cjc1.Player>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_if6qyzuu.Transfer>) {
+      return (data as List)
+              .map((e) => deserialize<_if6qyzuu.Transfer>(e))
               .toList()
           as T;
     }
@@ -173,6 +225,7 @@ class Protocol extends _is.DatabaseSerializationManager {
       _iaivvhjt.Flame => 'Flame',
       _izw8z7ou.Greeting => 'Greeting',
       _i1eknpuq.Player => 'Player',
+      _irt0g9l3.Transfer => 'Transfer',
       _ => null,
     };
   }
@@ -196,6 +249,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'Greeting';
       case _i1eknpuq.Player():
         return 'Player';
+      case _irt0g9l3.Transfer():
+        return 'Transfer';
     }
     className = _iais.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -230,6 +285,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'Player') {
       return deserialize<_i1eknpuq.Player>(data['data']);
+    }
+    if (dataClassName == 'Transfer') {
+      return deserialize<_irt0g9l3.Transfer>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
@@ -276,6 +334,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return _iaivvhjt.Flame.t;
       case _i1eknpuq.Player:
         return _i1eknpuq.Player.t;
+      case _irt0g9l3.Transfer:
+        return _irt0g9l3.Transfer.t;
     }
     return null;
   }

@@ -71,6 +71,12 @@ class FlameEndpoint extends Endpoint {
       throw Exception('No flame exists.');
     }
 
+    final previousHolderId = flame.currentHolderId;
+
+    if (previousHolderId == null) {
+      throw Exception('Current holder is not linked to a player.');
+    }
+
     final expiresAt = flame.expiresAt;
     final now = DateTime.now().toUtc();
 
@@ -96,6 +102,15 @@ class FlameEndpoint extends Endpoint {
     );
 
     flame = await Flame.db.updateRow(session, flame);
+
+    await Transfer.db.insertRow(
+      session,
+      Transfer(
+        fromPlayerId: previousHolderId,
+        toPlayerId: newHolder.id!,
+        transferredAt: DateTime.now().toUtc(),
+      ),
+    );
 
     return flame;
   }

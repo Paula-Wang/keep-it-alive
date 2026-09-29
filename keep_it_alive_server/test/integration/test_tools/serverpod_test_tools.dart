@@ -19,6 +19,8 @@ import 'package:keep_it_alive_server/src/generated/greetings/greeting.dart'
     as _ils43cnz;
 import 'package:keep_it_alive_server/src/generated/player/player.dart'
     as _i2f0cjc1;
+import 'package:keep_it_alive_server/src/generated/transfer/transfer.dart'
+    as _if6qyzuu;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
@@ -160,6 +162,8 @@ class TestEndpoints {
   late final _GreetingEndpoint greeting;
 
   late final _PlayerEndpoint player;
+
+  late final _TransferEndpoint transfer;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -186,6 +190,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     player = _PlayerEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    transfer = _TransferEndpoint(
       endpoints,
       serializationManager,
     );
@@ -749,6 +757,47 @@ class _PlayerEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<List<_i2f0cjc1.Player>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _TransferEndpoint {
+  _TransferEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<List<_if6qyzuu.Transfer>> getTransfers(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'transfer',
+            method: 'getTransfers',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'transfer',
+          methodName: 'getTransfers',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_if6qyzuu.Transfer>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

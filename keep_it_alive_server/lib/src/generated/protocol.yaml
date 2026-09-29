@@ -19,3 +19,5 @@ greeting:
 player:
   - createPlayer:
   - getPlayers:
+transfer:
+  - getTransfers:

@@ -18,6 +18,8 @@ import 'package:keep_it_alive_client/src/protocol/greetings/greeting.dart'
     as _ing4wbyb;
 import 'package:keep_it_alive_client/src/protocol/player/player.dart'
     as _ilc4ddwm;
+import 'package:keep_it_alive_client/src/protocol/transfer/transfer.dart'
+    as _ico6z2b1;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
@@ -325,6 +327,21 @@ class EndpointPlayer extends _isc.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointTransfer extends _isc.EndpointRef {
+  EndpointTransfer(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'transfer';
+
+  _ida.Future<List<_ico6z2b1.Transfer>> getTransfers() =>
+      caller.callServerEndpoint<List<_ico6z2b1.Transfer>>(
+        'transfer',
+        'getTransfers',
+        {},
+      );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _iaic.Caller(client);
@@ -368,6 +385,7 @@ class Client extends _isc.ServerpodClientShared {
     flame = EndpointFlame(this);
     greeting = EndpointGreeting(this);
     player = EndpointPlayer(this);
+    transfer = EndpointTransfer(this);
     modules = Modules(this);
   }
 
@@ -381,6 +399,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointPlayer player;
 
+  late final EndpointTransfer transfer;
+
   late final Modules modules;
 
   @override
@@ -390,6 +410,7 @@ class Client extends _isc.ServerpodClientShared {
     'flame': flame,
     'greeting': greeting,
     'player': player,
+    'transfer': transfer,
   };
 
   @override
