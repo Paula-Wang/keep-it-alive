@@ -79,11 +79,18 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
   Future<void> _loadCurrentHolder() async {
     final flame = await client.flame.getFlame();
 
+    final holderChanged =
+        _currentHolder != 'Loading...' && _currentHolder != flame.currentHolder;
+
     setState(() {
       _currentHolder = flame.currentHolder;
       _isAlive = flame.isAlive;
       _expiresAt = flame.expiresAt;
     });
+
+    if (holderChanged) {
+      await _loadTransfers();
+    }
   }
 
   void _updateCountdown() {
