@@ -17,6 +17,7 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
   String _currentHolder = 'Loading...';
   bool _isAlive = true;
   DateTime? _expiresAt;
+  int? _roundNumber;
   Timer? _timer;
   int _secondsRemaining = 0;
   List<Player> _players = [];
@@ -29,9 +30,9 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
 
     _loadPlayers();
 
-    _loadTransfers();
+    _loadCurrentHolder().then((_) async {
+      await _loadTransfers();
 
-    _loadCurrentHolder().then((_) {
       _updateCountdown();
 
       _timer = Timer.periodic(
@@ -62,7 +63,9 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
     final transfers = await client.transfer.getTransfers();
 
     setState(() {
-      _transfers = transfers;
+      _transfers = transfers
+          .where((transfer) => transfer.roundNumber == _roundNumber)
+          .toList();
     });
   }
 
@@ -86,6 +89,7 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
       _currentHolder = flame.currentHolder;
       _isAlive = flame.isAlive;
       _expiresAt = flame.expiresAt;
+      _roundNumber = flame.roundNumber;
     });
 
     if (holderChanged) {
@@ -204,6 +208,7 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
                           _currentHolder = flame.currentHolder;
                           _isAlive = flame.isAlive;
                           _expiresAt = flame.expiresAt;
+                          _roundNumber = flame.roundNumber;
                           _selectedPlayer = null;
                         });
 
@@ -261,6 +266,7 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
                       _currentHolder = flame.currentHolder;
                       _isAlive = flame.isAlive;
                       _expiresAt = flame.expiresAt;
+                      _roundNumber = flame.roundNumber;
                       _selectedPlayer = null;
                     });
 

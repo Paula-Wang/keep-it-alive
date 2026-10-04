@@ -4,3 +4,4 @@ fields:
   fromPlayerId: int
   toPlayerId: int
   transferredAt: DateTime
+  roundNumber: int?

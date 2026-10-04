@@ -28,6 +28,14 @@ class FlameEndpoint extends Endpoint {
       throw Exception('No flame exists.');
     }
 
+    if (flame.roundNumber == null) {
+      flame = flame.copyWith(
+        roundNumber: 1,
+      );
+
+      flame = await Flame.db.updateRow(session, flame);
+    }
+
     if (flame.expiresAt == null && flame.isAlive) {
       flame = flame.copyWith(
         expiresAt: DateTime.now().toUtc().add(
@@ -109,6 +117,7 @@ class FlameEndpoint extends Endpoint {
         fromPlayerId: previousHolderId,
         toPlayerId: newHolder.id!,
         transferredAt: DateTime.now().toUtc(),
+        roundNumber: flame.roundNumber,
       ),
     );
 
@@ -135,6 +144,7 @@ class FlameEndpoint extends Endpoint {
         currentHolder: holder.name,
         currentHolderId: holder.id,
         isAlive: true,
+        roundNumber: 1,
         expiresAt: DateTime.now().toUtc().add(
           const Duration(seconds: 30),
         ),
@@ -150,6 +160,7 @@ class FlameEndpoint extends Endpoint {
       expiresAt: DateTime.now().toUtc().add(
         const Duration(seconds: 30),
       ),
+      roundNumber: (flame.roundNumber ?? 0) + 1,
     );
 
     return await Flame.db.updateRow(session, flame);

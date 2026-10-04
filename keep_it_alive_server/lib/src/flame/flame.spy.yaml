@@ -5,4 +5,5 @@ fields:
   currentHolderId: int?
   isAlive: bool
   expiresAt: DateTime?
+  roundNumber: int?
  

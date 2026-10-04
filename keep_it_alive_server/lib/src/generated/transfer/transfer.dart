@@ -19,6 +19,7 @@ abstract class Transfer
     required this.fromPlayerId,
     required this.toPlayerId,
     required this.transferredAt,
+    this.roundNumber,
   });
 
   factory Transfer({
@@ -26,6 +27,7 @@ abstract class Transfer
     required int fromPlayerId,
     required int toPlayerId,
     required DateTime transferredAt,
+    int? roundNumber,
   }) = _TransferImpl;
 
   factory Transfer.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -36,6 +38,7 @@ abstract class Transfer
       transferredAt: _is.DateTimeJsonExtension.fromJson(
         jsonSerialization['transferredAt'],
       ),
+      roundNumber: jsonSerialization['roundNumber'] as int?,
     );
   }
 
@@ -52,6 +55,8 @@ abstract class Transfer
 
   DateTime transferredAt;
 
+  int? roundNumber;
+
   @override
   _is.Table<int?> get table => t;
 
@@ -63,6 +68,7 @@ abstract class Transfer
     int? fromPlayerId,
     int? toPlayerId,
     DateTime? transferredAt,
+    int? roundNumber,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -72,6 +78,7 @@ abstract class Transfer
       'fromPlayerId': fromPlayerId,
       'toPlayerId': toPlayerId,
       'transferredAt': transferredAt.toJson(),
+      if (roundNumber != null) 'roundNumber': roundNumber,
     };
   }
 
@@ -83,6 +90,7 @@ abstract class Transfer
       'fromPlayerId': fromPlayerId,
       'toPlayerId': toPlayerId,
       'transferredAt': transferredAt.toJson(),
+      if (roundNumber != null) 'roundNumber': roundNumber,
     };
   }
 
@@ -122,11 +130,13 @@ class _TransferImpl extends Transfer {
     required int fromPlayerId,
     required int toPlayerId,
     required DateTime transferredAt,
+    int? roundNumber,
   }) : super._(
          id: id,
          fromPlayerId: fromPlayerId,
          toPlayerId: toPlayerId,
          transferredAt: transferredAt,
+         roundNumber: roundNumber,
        );
 
   /// Returns a shallow copy of this [Transfer]
@@ -138,12 +148,14 @@ class _TransferImpl extends Transfer {
     int? fromPlayerId,
     int? toPlayerId,
     DateTime? transferredAt,
+    Object? roundNumber = _Undefined,
   }) {
     return Transfer(
       id: id is int? ? id : this.id,
       fromPlayerId: fromPlayerId ?? this.fromPlayerId,
       toPlayerId: toPlayerId ?? this.toPlayerId,
       transferredAt: transferredAt ?? this.transferredAt,
+      roundNumber: roundNumber is int? ? roundNumber : this.roundNumber,
     );
   }
 }
@@ -166,6 +178,11 @@ class TransferUpdateTable extends _is.UpdateTable<TransferTable> {
         table.transferredAt,
         value,
       );
+
+  _is.ColumnValue<int, int> roundNumber(int? value) => _is.ColumnValue(
+    table.roundNumber,
+    value,
+  );
 }
 
 class TransferTable extends _is.Table<int?> {
@@ -183,6 +200,10 @@ class TransferTable extends _is.Table<int?> {
       'transferredAt',
       this,
     );
+    roundNumber = _is.ColumnInt(
+      'roundNumber',
+      this,
+    );
   }
 
   late final TransferUpdateTable updateTable;
@@ -193,12 +214,15 @@ class TransferTable extends _is.Table<int?> {
 
   late final _is.ColumnDateTime transferredAt;
 
+  late final _is.ColumnInt roundNumber;
+
   @override
   List<_is.Column> get columns => [
     id,
     fromPlayerId,
     toPlayerId,
     transferredAt,
+    roundNumber,
   ];
 }
 

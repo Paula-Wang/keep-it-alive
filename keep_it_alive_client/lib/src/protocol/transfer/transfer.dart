@@ -19,6 +19,7 @@ abstract class Transfer
     required this.fromPlayerId,
     required this.toPlayerId,
     required this.transferredAt,
+    this.roundNumber,
   });
 
   factory Transfer({
@@ -26,6 +27,7 @@ abstract class Transfer
     required int fromPlayerId,
     required int toPlayerId,
     required DateTime transferredAt,
+    int? roundNumber,
   }) = _TransferImpl;
 
   factory Transfer.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -36,6 +38,7 @@ abstract class Transfer
       transferredAt: _isc.DateTimeJsonExtension.fromJson(
         jsonSerialization['transferredAt'],
       ),
+      roundNumber: jsonSerialization['roundNumber'] as int?,
     );
   }
 
@@ -50,6 +53,8 @@ abstract class Transfer
 
   DateTime transferredAt;
 
+  int? roundNumber;
+
   /// Returns a shallow copy of this [Transfer]
   /// with some or all fields replaced by the given arguments.
   @_isc.useResult
@@ -58,6 +63,7 @@ abstract class Transfer
     int? fromPlayerId,
     int? toPlayerId,
     DateTime? transferredAt,
+    int? roundNumber,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -67,6 +73,7 @@ abstract class Transfer
       'fromPlayerId': fromPlayerId,
       'toPlayerId': toPlayerId,
       'transferredAt': transferredAt.toJson(),
+      if (roundNumber != null) 'roundNumber': roundNumber,
     };
   }
 
@@ -78,6 +85,7 @@ abstract class Transfer
       'fromPlayerId': fromPlayerId,
       'toPlayerId': toPlayerId,
       'transferredAt': transferredAt.toJson(),
+      if (roundNumber != null) 'roundNumber': roundNumber,
     };
   }
 
@@ -95,11 +103,13 @@ class _TransferImpl extends Transfer {
     required int fromPlayerId,
     required int toPlayerId,
     required DateTime transferredAt,
+    int? roundNumber,
   }) : super._(
          id: id,
          fromPlayerId: fromPlayerId,
          toPlayerId: toPlayerId,
          transferredAt: transferredAt,
+         roundNumber: roundNumber,
        );
 
   /// Returns a shallow copy of this [Transfer]
@@ -111,12 +121,14 @@ class _TransferImpl extends Transfer {
     int? fromPlayerId,
     int? toPlayerId,
     DateTime? transferredAt,
+    Object? roundNumber = _Undefined,
   }) {
     return Transfer(
       id: id is int? ? id : this.id,
       fromPlayerId: fromPlayerId ?? this.fromPlayerId,
       toPlayerId: toPlayerId ?? this.toPlayerId,
       transferredAt: transferredAt ?? this.transferredAt,
+      roundNumber: roundNumber is int? ? roundNumber : this.roundNumber,
     );
   }
 }

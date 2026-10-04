@@ -20,6 +20,7 @@ abstract class Flame
     this.currentHolderId,
     required this.isAlive,
     this.expiresAt,
+    this.roundNumber,
   });
 
   factory Flame({
@@ -28,6 +29,7 @@ abstract class Flame
     int? currentHolderId,
     required bool isAlive,
     DateTime? expiresAt,
+    int? roundNumber,
   }) = _FlameImpl;
 
   factory Flame.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -39,6 +41,7 @@ abstract class Flame
       expiresAt: jsonSerialization['expiresAt'] == null
           ? null
           : _isc.DateTimeJsonExtension.fromJson(jsonSerialization['expiresAt']),
+      roundNumber: jsonSerialization['roundNumber'] as int?,
     );
   }
 
@@ -55,6 +58,8 @@ abstract class Flame
 
   DateTime? expiresAt;
 
+  int? roundNumber;
+
   /// Returns a shallow copy of this [Flame]
   /// with some or all fields replaced by the given arguments.
   @_isc.useResult
@@ -64,6 +69,7 @@ abstract class Flame
     int? currentHolderId,
     bool? isAlive,
     DateTime? expiresAt,
+    int? roundNumber,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -74,6 +80,7 @@ abstract class Flame
       if (currentHolderId != null) 'currentHolderId': currentHolderId,
       'isAlive': isAlive,
       if (expiresAt != null) 'expiresAt': expiresAt?.toJson(),
+      if (roundNumber != null) 'roundNumber': roundNumber,
     };
   }
 
@@ -86,6 +93,7 @@ abstract class Flame
       if (currentHolderId != null) 'currentHolderId': currentHolderId,
       'isAlive': isAlive,
       if (expiresAt != null) 'expiresAt': expiresAt?.toJson(),
+      if (roundNumber != null) 'roundNumber': roundNumber,
     };
   }
 
@@ -104,12 +112,14 @@ class _FlameImpl extends Flame {
     int? currentHolderId,
     required bool isAlive,
     DateTime? expiresAt,
+    int? roundNumber,
   }) : super._(
          id: id,
          currentHolder: currentHolder,
          currentHolderId: currentHolderId,
          isAlive: isAlive,
          expiresAt: expiresAt,
+         roundNumber: roundNumber,
        );
 
   /// Returns a shallow copy of this [Flame]
@@ -122,6 +132,7 @@ class _FlameImpl extends Flame {
     Object? currentHolderId = _Undefined,
     bool? isAlive,
     Object? expiresAt = _Undefined,
+    Object? roundNumber = _Undefined,
   }) {
     return Flame(
       id: id is int? ? id : this.id,
@@ -131,6 +142,7 @@ class _FlameImpl extends Flame {
           : this.currentHolderId,
       isAlive: isAlive ?? this.isAlive,
       expiresAt: expiresAt is DateTime? ? expiresAt : this.expiresAt,
+      roundNumber: roundNumber is int? ? roundNumber : this.roundNumber,
     );
   }
 }
