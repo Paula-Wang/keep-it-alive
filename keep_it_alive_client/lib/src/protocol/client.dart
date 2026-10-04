@@ -272,12 +272,17 @@ class EndpointFlame extends _isc.EndpointRef {
         {},
       );
 
-  _ida.Future<_is6hy4a6.Flame> passFlame(int newHolderId) =>
-      caller.callServerEndpoint<_is6hy4a6.Flame>(
-        'flame',
-        'passFlame',
-        {'newHolderId': newHolderId},
-      );
+  _ida.Future<_is6hy4a6.Flame> passFlame(
+    int fromPlayerId,
+    int newHolderId,
+  ) => caller.callServerEndpoint<_is6hy4a6.Flame>(
+    'flame',
+    'passFlame',
+    {
+      'fromPlayerId': fromPlayerId,
+      'newHolderId': newHolderId,
+    },
+  );
 
   _ida.Future<_is6hy4a6.Flame> startNewFlame(int holderId) =>
       caller.callServerEndpoint<_is6hy4a6.Flame>(

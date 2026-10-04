@@ -590,6 +590,7 @@ class _FlameEndpoint {
 
   _ida.Future<_igzuzhsr.Flame> passFlame(
     _ist.TestSessionBuilder sessionBuilder,
+    int fromPlayerId,
     int newHolderId,
   ) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
@@ -603,7 +604,10 @@ class _FlameEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'flame',
           methodName: 'passFlame',
-          parameters: _ist.testObjectToJson({'newHolderId': newHolderId}),
+          parameters: _ist.testObjectToJson({
+            'fromPlayerId': fromPlayerId,
+            'newHolderId': newHolderId,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =

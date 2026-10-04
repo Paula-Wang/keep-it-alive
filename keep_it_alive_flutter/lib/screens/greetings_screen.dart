@@ -15,12 +15,15 @@ class GreetingsScreen extends StatefulWidget {
 
 class _GreetingsScreenState extends State<GreetingsScreen> {
   String _currentHolder = 'Loading...';
+  int? _currentHolderId;
   bool _isAlive = true;
   DateTime? _expiresAt;
   int? _roundNumber;
   Timer? _timer;
   int _secondsRemaining = 0;
   List<Player> _players = [];
+  Player? _currentPlayer;
+  Player? _playerToEnterAs;
   Player? _selectedPlayer;
   List<Transfer> _transfers = [];
 
@@ -87,6 +90,7 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
 
     setState(() {
       _currentHolder = flame.currentHolder;
+      _currentHolderId = flame.currentHolderId;
       _isAlive = flame.isAlive;
       _expiresAt = flame.expiresAt;
       _roundNumber = flame.roundNumber;
@@ -166,12 +170,41 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 40),
-              const SizedBox(height: 40),
+              const SizedBox(height: 24),
+
               SizedBox(
                 width: 300,
                 child: DropdownButtonFormField<Player>(
-                  value: _selectedPlayer,
+                  value: _currentPlayer,
+                  decoration: const InputDecoration(
+                    labelText: 'Who are you?',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: _players
+                      .where((player) => player.id != _currentHolderId)
+                      .map((player) {
+                        return DropdownMenuItem<Player>(
+                          value: player,
+                          child: Text(player.name),
+                        );
+                      })
+                      .toList(),
+                  onChanged: (player) {
+                    setState(() {
+                      _currentPlayer = player;
+                    });
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              SizedBox(
+                width: 300,
+                child: DropdownButtonFormField<Player>(
+                  value: _selectedPlayer?.id == _currentHolderId
+                      ? null
+                      : _selectedPlayer,
                   decoration: const InputDecoration(
                     labelText: 'Who should receive the flame?',
                     border: OutlineInputBorder(),
@@ -193,7 +226,10 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: !_isAlive || _selectedPlayer == null
+                onPressed:
+                    !_isAlive ||
+                        _selectedPlayer == null ||
+                        _currentPlayer?.id != _currentHolderId
                     ? null
                     : () async {
                         final player = _selectedPlayer!;
@@ -202,18 +238,40 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
                           return;
                         }
 
-                        final flame = await client.flame.passFlame(player.id!);
+                        final currentPlayer = _currentPlayer;
 
-                        setState(() {
-                          _currentHolder = flame.currentHolder;
-                          _isAlive = flame.isAlive;
-                          _expiresAt = flame.expiresAt;
-                          _roundNumber = flame.roundNumber;
-                          _selectedPlayer = null;
-                        });
+                        if (currentPlayer == null || currentPlayer.id == null) {
+                          return;
+                        }
 
-                        _updateCountdown();
-                        await _loadTransfers();
+                        try {
+                          final flame = await client.flame.passFlame(
+                            currentPlayer.id!,
+                            player.id!,
+                          );
+
+                          setState(() {
+                            _currentHolder = flame.currentHolder;
+                            _currentHolderId = flame.currentHolderId;
+                            _isAlive = flame.isAlive;
+                            _expiresAt = flame.expiresAt;
+                            _roundNumber = flame.roundNumber;
+                            _selectedPlayer = null;
+                          });
+
+                          _updateCountdown();
+                          await _loadTransfers();
+                        } catch (error) {
+                          if (!mounted) return;
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'You cannot pass the flame because you are not the current holder.',
+                              ),
+                            ),
+                          );
+                        }
                       },
                 child: const Text('PASS THE FLAME'),
               ),
@@ -264,6 +322,7 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
 
                     setState(() {
                       _currentHolder = flame.currentHolder;
+                      _currentHolderId = flame.currentHolderId;
                       _isAlive = flame.isAlive;
                       _expiresAt = flame.expiresAt;
                       _roundNumber = flame.roundNumber;

@@ -63,6 +63,7 @@ class FlameEndpoint extends Endpoint {
 
   Future<Flame> passFlame(
     Session session,
+    int fromPlayerId,
     int newHolderId,
   ) async {
     final newHolder = await Player.db.findById(
@@ -83,6 +84,14 @@ class FlameEndpoint extends Endpoint {
 
     if (previousHolderId == null) {
       throw Exception('Current holder is not linked to a player.');
+    }
+
+    if (previousHolderId != fromPlayerId) {
+      throw Exception('You are not the current holder of the flame.');
+    }
+
+    if (fromPlayerId == newHolderId) {
+      throw Exception('You cannot pass the flame to yourself.');
     }
 
     final expiresAt = flame.expiresAt;

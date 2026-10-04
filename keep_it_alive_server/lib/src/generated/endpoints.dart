@@ -296,6 +296,11 @@ class Endpoints extends _is.EndpointDispatch {
         'passFlame': _is.MethodConnector(
           name: 'passFlame',
           params: {
+            'fromPlayerId': _is.ParameterDescription(
+              name: 'fromPlayerId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
             'newHolderId': _is.ParameterDescription(
               name: 'newHolderId',
               type: _is.getType<int>(),
@@ -309,6 +314,7 @@ class Endpoints extends _is.EndpointDispatch {
               ) async =>
                   (endpoints['flame'] as _i3knnotg.FlameEndpoint).passFlame(
                     session,
+                    params['fromPlayerId'],
                     params['newHolderId'],
                   ),
         ),
