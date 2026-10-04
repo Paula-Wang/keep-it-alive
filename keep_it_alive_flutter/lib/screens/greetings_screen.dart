@@ -36,8 +36,9 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
 
       _timer = Timer.periodic(
         const Duration(seconds: 1),
-        (_) {
+        (_) async {
           _updateCountdown();
+          await _loadCurrentHolder();
         },
       );
     });
