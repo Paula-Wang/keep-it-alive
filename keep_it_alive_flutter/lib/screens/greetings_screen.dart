@@ -113,156 +113,159 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-  child: Center(
-    child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              '🔥',
-              style: TextStyle(fontSize: 80),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'KEEP IT ALIVE',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 40),
-            const Text(
-              'Current holder',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _currentHolder,
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              _isAlive
-                  ? '$_secondsRemaining seconds remaining'
-                  : 'The flame has died 💀',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 40),
-            const SizedBox(height: 40),
-            SizedBox(
-              width: 300,
-              child: DropdownButtonFormField<Player>(
-                value: _selectedPlayer,
-                decoration: const InputDecoration(
-                  labelText: 'Who should receive the flame?',
-                  border: OutlineInputBorder(),
-                ),
-                items: _players.map((player) {
-                  return DropdownMenuItem<Player>(
-                    value: player,
-                    child: Text(player.name),
-                  );
-                }).toList(),
-                onChanged: _isAlive
-                    ? (player) {
-                        setState(() {
-                          _selectedPlayer = player;
-                        });
-                      }
-                    : null,
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: !_isAlive || _selectedPlayer == null
-                  ? null
-                  : () async {
-                      final player = _selectedPlayer!;
-
-                      if (player.id == null) {
-                        return;
-                      }
-
-                      final flame = await client.flame.passFlame(player.id!);
-
-                      setState(() {
-                        _currentHolder = flame.currentHolder;
-                        _isAlive = flame.isAlive;
-                        _expiresAt = flame.expiresAt;
-                        _selectedPlayer = null;
-                      });
-
-                      _updateCountdown();
-                    },
-              child: const Text('PASS THE FLAME'),
-            ),
-            const SizedBox(height: 32),
-
-            if (_transfers.isNotEmpty) ...[
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
               const Text(
-                'FLAME JOURNEY 🔥',
+                '🔥',
+                style: TextStyle(fontSize: 80),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'KEEP IT ALIVE',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 12),
-
-              ..._transfers.reversed.take(5).map((transfer) {
-                final fromName = _playerName(transfer.fromPlayerId);
-                final toName = _playerName(transfer.toPlayerId);
-                final time = transfer.transferredAt.toLocal();
-
-                final formattedTime =
-                    '${time.hour.toString().padLeft(2, '0')}:'
-                    '${time.minute.toString().padLeft(2, '0')}:'
-                    '${time.second.toString().padLeft(2, '0')}';
-
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
-                    '$fromName → $toName  •  $formattedTime',
-                    style: const TextStyle(fontSize: 16),
+              const SizedBox(height: 40),
+              const Text(
+                'Current holder',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _currentHolder,
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                _isAlive
+                    ? '$_secondsRemaining seconds remaining'
+                    : 'The flame has died 💀',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 40),
+              const SizedBox(height: 40),
+              SizedBox(
+                width: 300,
+                child: DropdownButtonFormField<Player>(
+                  value: _selectedPlayer,
+                  decoration: const InputDecoration(
+                    labelText: 'Who should receive the flame?',
+                    border: OutlineInputBorder(),
                   ),
-                );
-              }),
-            ],
-            if (!_isAlive) ...[
+                  items: _players.map((player) {
+                    return DropdownMenuItem<Player>(
+                      value: player,
+                      child: Text(player.name),
+                    );
+                  }).toList(),
+                  onChanged: _isAlive
+                      ? (player) {
+                          setState(() {
+                            _selectedPlayer = player;
+                          });
+                        }
+                      : null,
+                ),
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () async {
-                  final pauline = _players.firstWhere(
-                    (player) => player.name == 'Pauline',
-                  );
+                onPressed: !_isAlive || _selectedPlayer == null
+                    ? null
+                    : () async {
+                        final player = _selectedPlayer!;
 
-                  if (pauline.id == null) {
-                    return;
-                  }
+                        if (player.id == null) {
+                          return;
+                        }
 
-                  final flame = await client.flame.startNewFlame(pauline.id!);
+                        final flame = await client.flame.passFlame(player.id!);
 
-                  setState(() {
-                    _currentHolder = flame.currentHolder;
-                    _isAlive = flame.isAlive;
-                    _expiresAt = flame.expiresAt;
-                  });
+                        setState(() {
+                          _currentHolder = flame.currentHolder;
+                          _isAlive = flame.isAlive;
+                          _expiresAt = flame.expiresAt;
+                          _selectedPlayer = null;
+                        });
 
-                  _updateCountdown();
-                },
-                child: const Text('START NEW FLAME'),
+                        _updateCountdown();
+                        await _loadTransfers();
+                      },
+                child: const Text('PASS THE FLAME'),
               ),
+              const SizedBox(height: 32),
+
+              if (_transfers.isNotEmpty) ...[
+                const Text(
+                  'FLAME JOURNEY 🔥',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                ..._transfers.reversed.take(5).map((transfer) {
+                  final fromName = _playerName(transfer.fromPlayerId);
+                  final toName = _playerName(transfer.toPlayerId);
+                  final time = transfer.transferredAt.toLocal();
+
+                  final formattedTime =
+                      '${time.hour.toString().padLeft(2, '0')}:'
+                      '${time.minute.toString().padLeft(2, '0')}:'
+                      '${time.second.toString().padLeft(2, '0')}';
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Text(
+                      '$fromName → $toName  •  $formattedTime',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  );
+                }),
+              ],
+              if (!_isAlive) ...[
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    final pauline = _players.firstWhere(
+                      (player) => player.name == 'Pauline',
+                    );
+
+                    if (pauline.id == null) {
+                      return;
+                    }
+
+                    final flame = await client.flame.startNewFlame(pauline.id!);
+
+                    setState(() {
+                      _currentHolder = flame.currentHolder;
+                      _isAlive = flame.isAlive;
+                      _expiresAt = flame.expiresAt;
+                      _selectedPlayer = null;
+                    });
+
+                    _updateCountdown();
+                    await _loadTransfers();
+                  },
+                  child: const Text('START NEW FLAME'),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
-  ),
     );
   }
 }
