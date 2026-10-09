@@ -88,6 +88,9 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
     final holderChanged =
         _currentHolder != 'Loading...' && _currentHolder != flame.currentHolder;
 
+    final roundChanged =
+        _roundNumber != null && _roundNumber != flame.roundNumber;
+
     setState(() {
       _currentHolder = flame.currentHolder;
       _currentHolderId = flame.currentHolderId;
@@ -96,7 +99,7 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
       _roundNumber = flame.roundNumber;
     });
 
-    if (holderChanged) {
+    if (holderChanged || roundChanged) {
       await _loadTransfers();
     }
   }
@@ -128,6 +131,71 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_currentPlayer == null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                '🔥',
+                style: TextStyle(fontSize: 80),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'KEEP IT ALIVE',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Choose your player to enter the game',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 32),
+
+              SizedBox(
+                width: 300,
+                child: DropdownButtonFormField<Player>(
+                  value: _playerToEnterAs,
+                  decoration: const InputDecoration(
+                    labelText: 'Choose your player',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: _players.map((player) {
+                    return DropdownMenuItem<Player>(
+                      value: player,
+                      child: Text(player.name),
+                    );
+                  }).toList(),
+                  onChanged: (player) {
+                    setState(() {
+                      _playerToEnterAs = player;
+                    });
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              ElevatedButton(
+                onPressed: _playerToEnterAs == null
+                    ? null
+                    : () {
+                        setState(() {
+                          _currentPlayer = _playerToEnterAs;
+                        });
+                      },
+                child: const Text('ENTER GAME'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     return SingleChildScrollView(
       child: Center(
         child: Padding(
@@ -168,32 +236,6 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              SizedBox(
-                width: 300,
-                child: DropdownButtonFormField<Player>(
-                  value: _currentPlayer,
-                  decoration: const InputDecoration(
-                    labelText: 'Who are you?',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: _players
-                      .where((player) => player.id != _currentHolderId)
-                      .map((player) {
-                        return DropdownMenuItem<Player>(
-                          value: player,
-                          child: Text(player.name),
-                        );
-                      })
-                      .toList(),
-                  onChanged: (player) {
-                    setState(() {
-                      _currentPlayer = player;
-                    });
-                  },
                 ),
               ),
 
@@ -310,15 +352,15 @@ class _GreetingsScreenState extends State<GreetingsScreen> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
-                    final pauline = _players.firstWhere(
-                      (player) => player.name == 'Pauline',
-                    );
+                    final currentPlayer = _currentPlayer;
 
-                    if (pauline.id == null) {
+                    if (currentPlayer == null || currentPlayer.id == null) {
                       return;
                     }
 
-                    final flame = await client.flame.startNewFlame(pauline.id!);
+                    final flame = await client.flame.startNewFlame(
+                      currentPlayer.id!,
+                    );
 
                     setState(() {
                       _currentHolder = flame.currentHolder;
